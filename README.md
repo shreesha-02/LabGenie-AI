@@ -1,238 +1,298 @@
 # LabGenie AI
 
-> **IBM SkillsBuild / AICTE Internship Project**
+### IBM SkillsBuild / AICTE Internship Project
 
-An AI-powered agent that helps students and educators generate **structured laboratory experiment manuals** from a subject and topic. Powered by **IBM Granite** (watsonx.ai) and **RAG** (Retrieval-Augmented Generation) — _integration coming in a future phase_.
+LabGenie AI is an AI-powered laboratory learning platform that helps students generate structured lab manuals, understand concepts with an AI tutor, and practice algorithms through interactive virtual experiments.
 
----
-
-## Table of Contents
-
-- [Project Purpose](#project-purpose)
-- [Current Architecture](#current-architecture)
-- [Folder Structure](#folder-structure)
-- [How to Run](#how-to-run)
-- [API Reference](#api-reference)
-- [Roadmap](#roadmap)
+Powered by **IBM watsonx.ai**, **IBM Granite 4 H Small**, and a lightweight **RAG-based knowledge retrieval system**.
 
 ---
 
-## Project Purpose
+## ✨ Key Features
 
-Lab manuals are essential in engineering and science education, but writing them from scratch is time-consuming. LabGenie AI solves this by letting students or educators enter a **subject** and **experiment topic**, choose a **difficulty level**, and instantly receive a complete structured lab manual with:
+### 🤖 AI Lab Manual Generator
+
+Generate complete experiment manuals based on:
+
+- Subject
+- Experiment / Topic
+- Difficulty level
+
+Each generated manual includes:
 
 - Aim
 - Theory
 - Requirements
 - Procedure
-- Code (with syntax)
+- Code
 - Expected Output
 - Precautions
-- Viva Questions & Answers
-- Evaluation Rubric
+- Viva Questions with Answers
+- 100-Mark Evaluation Rubric
+
+### 📚 RAG-Enhanced Learning
+
+LabGenie uses a curated local knowledge base to retrieve relevant information before generating AI responses.
+
+The knowledge base contains resources for:
+
+- Data Structures
+- Python
+- DBMS
+- Operating Systems
+- Computer Networks
+- Machine Learning
+
+The retriever uses keyword-based relevance scoring and provides the most relevant context to IBM Granite.
+
+### 💬 AI Learning Tutor
+
+Students can ask questions about laboratory concepts and receive contextual explanations powered by IBM Granite and RAG.
+
+The tutor can help with:
+
+- Concept explanations
+- Algorithms
+- Time complexity
+- Precautions
+- Real-world applications
+- Topic-specific questions
+
+### 🧪 Interactive Virtual Lab
+
+LabGenie includes browser-based interactive experiments for:
+
+- K-Means Clustering
+- Binary Search
+
+These simulations run entirely on the client side and do not require AI or network requests.
+
+### 🎯 Difficulty-Based Learning
+
+Experiments can be generated at:
+
+- Beginner
+- Intermediate
+- Advanced
 
 ---
 
-## Current Architecture
+## 🏗️ System Architecture
 
+```text
+Student
+   ↓
+React Frontend
+   ├── Generate
+   ├── AI Tutor
+   └── Virtual Lab
+          │
+          │ Generate / Ask
+          ▼
+Node.js / Express Backend
+          ↓
+RAG Knowledge Base
+          ↓
+IBM watsonx.ai
+(Granite 4 H Small)
+          ↓
+AI-Generated Output
 ```
-Browser (React + Vite)
-        │
-        │  POST /api/lab/generate
-        ▼
-Express Backend (Node.js)
-        │
-        │  [Phase 2] IBM watsonx.ai — Granite LLM
-        │  [Phase 2] RAG — vector DB / document retrieval
-        ▼
-  Mock Response (current)
-```
-
-**Phase 1 (this step):** Full-stack scaffold with mock data. No external API calls.  
-**Phase 2 (upcoming):** Replace mock controller with IBM Granite LLM + RAG pipeline.
 
 ---
 
-## Folder Structure
+## 🛠️ Technology Stack
 
-```
+### Frontend
+
+- React.js
+- Vite
+- JavaScript
+- CSS
+
+### Backend
+
+- Node.js
+- Express.js
+- REST APIs
+- CORS
+- dotenv
+
+### AI & Cloud
+
+- IBM watsonx.ai
+- IBM Granite 4 H Small
+- IBM Cloud
+- IAM Authentication
+
+### Knowledge Retrieval
+
+- Lightweight keyword-based RAG
+- Curated Markdown knowledge base
+
+---
+
+## 📁 Project Structure
+
+```text
 LabGenie-AI/
+│
 ├── backend/
-│   ├── src/
-│   │   ├── controllers/
-│   │   │   └── labController.js   # Business logic (mock → Granite in Phase 2)
-│   │   ├── routes/
-│   │   │   ├── health.js          # GET /api/health
-│   │   │   └── lab.js             # POST /api/lab/generate
-│   │   └── index.js               # Express app entry point
-│   ├── .env.example               # Environment variable template
-│   └── package.json
+│   ├── package.json
+│   ├── .env.example
+│   └── src/
+│       ├── index.js
+│       ├── routes/
+│       │   ├── health.js
+│       │   ├── lab.js
+│       │   └── assistant.js
+│       ├── controllers/
+│       │   ├── labController.js
+│       │   └── assistantController.js
+│       └── rag/
+│           └── retriever.js
 │
 ├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── Header.jsx         # App branding & description
-│   │   │   ├── GeneratorForm.jsx  # Subject / topic / difficulty inputs
-│   │   │   ├── LabManualResults.jsx  # Renders all manual sections
-│   │   │   ├── SectionCard.jsx    # Reusable section wrapper
-│   │   │   └── Footer.jsx
-│   │   ├── services/
-│   │   │   └── labService.js      # fetch() calls to the backend
-│   │   ├── App.jsx                # Root component & state
-│   │   ├── main.jsx               # React entry point
-│   │   └── index.css              # All styles (no external CSS library)
-│   ├── .env.example
-│   ├── index.html
+│   ├── package.json
 │   ├── vite.config.js
-│   └── package.json
+│   ├── index.html
+│   └── src/
+│       ├── main.jsx
+│       ├── App.jsx
+│       ├── index.css
+│       ├── services/
+│       │   └── labService.js
+│       └── components/
+│           ├── Header.jsx
+│           ├── GeneratorForm.jsx
+│           ├── LabManualResults.jsx
+│           ├── SectionCard.jsx
+│           ├── Footer.jsx
+│           ├── VirtualLab.jsx
+│           └── AiLabAssistant.jsx
 │
-└── README.md
+├── knowledge_base/
+│   ├── data_structures.md
+│   ├── python.md
+│   ├── dbms.md
+│   ├── operating_systems.md
+│   ├── computer_networks.md
+│   └── machine_learning.md
+│
+├── README.md
+└── SB4UniversityEngagements_AICTE_Problem Statements_2026.pdf
 ```
 
 ---
 
-## How to Run
+## 🔌 API Endpoints
 
-### Prerequisites
+### Health Check
 
-- [Node.js](https://nodejs.org/) v18 or later
-- npm (comes with Node.js)
+`GET /api/health`
+
+### Generate Lab Manual
+
+`POST /api/lab/generate`
+
+### AI Tutor
+
+`POST /api/assistant/ask`
 
 ---
 
-### 1. Backend
+## ⚙️ Setup
+
+### 1. Clone the Repository
 
 ```bash
-# Navigate to the backend folder
+git clone https://github.com/shreesha-02/LabGenie-AI.git
+cd LabGenie-AI
+```
+
+### 2. Backend Setup
+
+```bash
 cd backend
-
-# Install dependencies
 npm install
+```
 
-# (Optional) Copy and edit the environment file
-cp .env.example .env
+Create a `.env` file using `.env.example`:
 
-# Start the development server (auto-restarts on file changes)
-npm run dev
+```env
+PORT=5000
+WATSONX_API_KEY=your_watsonx_api_key
+WATSONX_PROJECT_ID=your_watsonx_project_id
+WATSONX_URL=https://us-south.ml.cloud.ibm.com
+```
 
-# Or start without auto-restart
+Start the backend:
+
+```bash
 npm start
 ```
 
-The backend will run at **http://localhost:5000**
+### 3. Frontend Setup
 
-**Health check:** `GET http://localhost:5000/api/health`
-
----
-
-### 2. Frontend
-
-Open a **new terminal**, then:
+Open a new terminal:
 
 ```bash
-# Navigate to the frontend folder
 cd frontend
-
-# Install dependencies
 npm install
-
-# Start the Vite dev server
 npm run dev
 ```
 
-The frontend will run at **http://localhost:3000**
-
-> The Vite dev server automatically proxies `/api/*` requests to `localhost:5000`, so both servers can run simultaneously without CORS issues in development.
+Open the local Vite URL shown in the terminal.
 
 ---
 
-### 3. Build for Production
+## 🔐 Security
 
-```bash
-# In the frontend folder
-npm run build
-# Output goes to frontend/dist/
-```
-
----
-
-## API Reference
-
-### `GET /api/health`
-
-Returns server status.
-
-**Response:**
-```json
-{
-  "status": "ok",
-  "service": "LabGenie AI Backend",
-  "timestamp": "2024-01-01T00:00:00.000Z"
-}
-```
+- IBM credentials are stored only in backend environment variables.
+- The real `.env` file is excluded from version control.
+- Only `.env.example` is included in the repository.
+- The frontend never directly handles IBM API credentials.
 
 ---
 
-### `POST /api/lab/generate`
+## 🧠 RAG Implementation
 
-Generates a structured lab manual.
+LabGenie uses a lightweight local retrieval system instead of a vector database.
 
-**Request body:**
-```json
-{
-  "subject": "Data Structures",
-  "topic": "Bubble Sort Algorithm",
-  "difficulty": "Intermediate"
-}
-```
+The retriever:
 
-**Response:**
-```json
-{
-  "success": true,
-  "manual": {
-    "aim": "...",
-    "theory": "...",
-    "requirements": ["..."],
-    "procedure": ["..."],
-    "code": "...",
-    "expectedOutput": "...",
-    "precautions": ["..."],
-    "vivaQuestions": [{ "question": "...", "answer": "..." }],
-    "evaluationRubric": [{ "criterion": "...", "marks": 20 }],
-    "meta": { "subject": "...", "topic": "...", "difficulty": "..." }
-  }
-}
-```
+1. Reads the curated Markdown knowledge base.
+2. Matches the requested subject and topic.
+3. Scores relevant content using keyword-based relevance.
+4. Selects the most relevant sources.
+5. Adds the retrieved context to the IBM Granite prompt.
 
 ---
 
-## Roadmap
+## 🚀 Project Status
 
-| Phase | Feature | Status |
-|-------|---------|--------|
-| 1 | Full-stack scaffold with mock data | ✅ Done |
-| 2 | IBM Granite LLM integration via watsonx.ai | 🔜 Planned |
-| 3 | RAG pipeline with document retrieval | 🔜 Planned |
-| 4 | PDF export of lab manual | 🔜 Planned |
-| 5 | User authentication & saved manuals | 🔜 Planned |
-
----
-
-## Environment Variables
-
-| Variable | Location | Description |
-|----------|----------|-------------|
-| `PORT` | backend/.env | Express server port (default: 5000) |
-| `IBM_GRANITE_API_URL` | backend/.env | IBM watsonx.ai inference endpoint (Phase 2) |
-| `IBM_API_KEY` | backend/.env | IBM Cloud API key (Phase 2) |
-| `IBM_PROJECT_ID` | backend/.env | watsonx.ai project ID (Phase 2) |
-| `VITE_API_BASE_URL` | frontend/.env | Backend URL (optional; defaults to `/api` proxy) |
-
-> **Never commit `.env` files with real credentials to version control.**
+- ✅ AI Lab Manual Generation
+- ✅ IBM Granite 4 H Small Integration
+- ✅ RAG Knowledge Retrieval
+- ✅ AI Learning Tutor
+- ✅ Interactive K-Means Experiment
+- ✅ Interactive Binary Search Experiment
+- ✅ Viva Questions
+- ✅ Evaluation Rubric
+- ✅ Difficulty-Based Generation
+- ✅ Manual Download
+- ✅ Responsive Web Interface
 
 ---
 
-## License
+## 🎓 Project Context
 
-This project is created for educational purposes as part of the IBM SkillsBuild / AICTE Internship programme.
+Developed as part of the **IBM SkillsBuild / AICTE Internship Project** based on:
+
+**Problem Statement No. 11 – AI Lab Manual & Experiment Generator**
+
+---
+
+## 📜 License
+
+This project is created for educational purposes as part of the **IBM SkillsBuild / AICTE Internship Project**.
